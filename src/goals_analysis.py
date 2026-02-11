@@ -5,19 +5,24 @@ df = pd.read_csv("data/premier_league.csv")
 
 
 
+
+#Criar coluna TotalGoals
+df['TotalGoals'] = df['FTHG'] + df['FTAG']
+
 #Média de golos por jogo
-media = df[['FTHG', 'FTAG']].mean()
+media_golos_jogo = df["TotalGoals"].mean()
 
-media_home = media['FTHG']
-media_away = media['FTAG']
-media_jogo = media.sum()
+#Média de golos por equipa
+media_golos_equipa_casa = df.groupby("HomeTeam")['FTHG'].mean()
+media_golos_equipa_fora = df.groupby("AwayTeam")['FTAG'].mean()
 
-df = df.assign(Total_Goals = df['FTHG'] + df['FTAG'])
+
+
+
+
 
 
 #Jogo com mais golos
-
-max_golos = df[['FTHG', 'FTAG']].max().max()
 jogo_max = df.loc[(df['FTHG'] + df['FTAG']).idxmax()]
 
 
@@ -45,8 +50,7 @@ top5_away_against = (
 print("=== GOAL ANALYSIS ===")
 
 #MÉDIA GOLOS POR JOGO
-print(f"Média de golos por jogo: {media_jogo:.2f}")
-
+print(f"Média de golos por jogo: {media_golos_jogo:.2f}")
 print("\n" + "-"*30 + "\n")
 
 #JOGO COM MAIS GOLOS
@@ -61,9 +65,7 @@ print("\n" + "-"*30 + "\n")
 print("Top 5 equipas - Golos em Casa:")
 for i, (equipa, golos) in enumerate(top5_home_goals.items(), 1):
     print(f"{i}. {equipa}: {golos}")
-
 print("\n" + "-"*30 + "\n")
-
 
 #TOP 5 SOFRIDOS FORA
 print("Top 5 equipas - Golos Sofridos Fora:")
