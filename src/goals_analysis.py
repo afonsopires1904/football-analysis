@@ -65,10 +65,7 @@ for i, (equipa, golos) in enumerate(top5_home_goals.items(), 1):
 print("\n" + "-"*30 + "\n")
 
 
-
 #TOP 5 SOFRIDOS FORA
-
-
 print("Top 5 equipas - Golos Sofridos Fora:")
 for i, (equipa, golos) in enumerate(top5_away_against.items(), 1):
     print(f"{i}. {equipa}: {golos}")
