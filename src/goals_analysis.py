@@ -2,10 +2,6 @@ import pandas as pd
 
 df = pd.read_csv("data/premier_league.csv")
 
-
-
-
-
 #Criar coluna TotalGoals
 df['TotalGoals'] = df['FTHG'] + df['FTAG']
 
@@ -15,11 +11,6 @@ media_golos_jogo = df["TotalGoals"].mean()
 #Média de golos por equipa
 media_golos_equipa_casa = df.groupby("HomeTeam")['FTHG'].mean()
 media_golos_equipa_fora = df.groupby("AwayTeam")['FTAG'].mean()
-
-
-
-
-
 
 
 #Jogo com mais golos

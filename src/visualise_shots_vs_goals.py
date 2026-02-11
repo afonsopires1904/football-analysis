@@ -23,9 +23,16 @@ df_casa_fora = pd.concat([df_casa, df_fora])
 
 #Agrupar por equipa e somar "Goals" e "ShotsOnTarget"
 stats_goals_goals_ST = df_casa_fora.groupby("Team")[["Goals", "ShotsOnTarget"]].sum()
-print(stats_goals_goals_ST)
 
+#EFICIÊNCIA ;; Eficiencia = (GOLOS / REMATES ENQUADRADOS) * 100
 
+# Calcular E adicionar ao DataFrame
+stats_goals_goals_ST['Efficiency'] = (
+    stats_goals_goals_ST["Goals"] / 
+    stats_goals_goals_ST["ShotsOnTarget"]
+) * 100
+
+top5 = stats_goals_goals_ST.sort_values("Efficiency", ascending=False).head(5)
 
 #GRAFICO DISPERSAO - REMATES vs GOLOS
 
@@ -43,9 +50,7 @@ b = coeficientes[1]
 linha_x = np.array([x.min(), x.max()])
 linha_y = m * linha_x + b
 
-
-
-
+#Scatter
 plt.scatter(x, y, s=100, alpha=0.6, color='blue', label='Teams')
 
 #LINHA DE TENDÊNCIA PLOTTED
@@ -65,6 +70,17 @@ for equipa in stats_goals_goals_ST.index:
         bbox=dict(boxstyle='round,pad=0.3', facecolor='yellow', alpha=0.3)
     )
 
+#EFICIÊNICA NO PLOT
+top5_eff = "Efficiency: \n"
+for equipa in top5.index:
+    eficiencia = top5.loc[equipa, "Efficiency"]
+
+    top5_eff += f"{equipa}: {eficiencia:.1f}%\n"
+
+plt.text(0.05, 0.95, top5_eff,
+         transform=plt.gca().transAxes,
+         verticalalignment='top',
+         bbox=dict(boxstyle='round', facecolor = "lightgreen", alpha=0.8))
 
 plt.xlabel("Shots On Target")
 plt.ylabel("Goals")
