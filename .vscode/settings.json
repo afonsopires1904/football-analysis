@@ -2,7 +2,17 @@
     "editor.fontSize": 14,
     "cSpell.language": "en,pt",
     "cSpell.words": [
+        "boxstyle",
+        "facecolor",
+        "figsize",
+        "fontsize",
         "FTAG",
-        "FTHG"
+        "FTHG",
+        "HTAG",
+        "HTHG",
+        "textcoords",
+        "xlabel",
+        "xytext",
+        "ylabel"
     ]
 }
