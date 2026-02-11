@@ -11,7 +11,7 @@ print("First 5 rows:", df.head())
 print("\n" + "="*50 + "\n")
 
 #Info sobre colunas
-print("Column information:", df.info())
+print("Column information:", df.info(97))
 print("\n" + "="*50 + "\n")
 
 #Estatisticas Descritivas
