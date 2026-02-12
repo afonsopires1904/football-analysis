@@ -31,6 +31,14 @@ df_jogo = df.iloc[1:].copy()
 df_jogo["Total_Golos"] = df_jogo["FTHG"] + df_jogo["FTAG"]
 
 
+#A equipa com mais remates ganha quanta % dos jogos?
+
+
+
+
+
+
+
 
 
 
@@ -57,7 +65,7 @@ ax[0].set_xlabel("Wins")
 ax[0].bar_label(bars1, padding=5, fontweight='bold')
 ax[0].grid(axis='x', linestyle='--', alpha=0.6)
 
-# --- GRÁFICO 2: ESPAÇO PARA O PRÓXIMO (Ex: Gols ou Cartões) ---
+# --- GRÁFICO 2: TOTAL GOLOS POR JOGO) ---
 bins = range(0, df_jogo['Total_Golos'].max() + 2) 
 ax[1].hist(df_jogo['Total_Golos'], bins=bins, color='skyblue', edgecolor='black', align='left')
 ax[1].set_title("Distribution of Total Goals per Match", fontsize=14, pad=10)
