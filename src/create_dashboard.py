@@ -33,12 +33,61 @@ df_jogo["Total_Golos"] = df_jogo["FTHG"] + df_jogo["FTAG"]
 
 #A equipa com mais remates ganha quanta % dos jogos?
 
+#Preciso de saber em cada jogo quem é que teve mais remates
+df_analise = df.copy()
+
+df_analise["MaisRemates"] = None
+
+#Quantos jogos foram ganhos pela equipa que teve mais remates
+for index, row in df_analise.iterrows():
+
+    remates_casa = row["HS"]
+    remates_fora = row["AS"]
+
+    #comparar
+
+    if remates_casa > remates_fora:
+        df_analise.loc[index, "MaisRemates"] = "H"
+    elif remates_casa < remates_fora:
+        df_analise.loc[index, "MaisRemates"] = "A"
+    else:
+        df_analise.loc[index, "MaisRemates"] = "D"
+
+
+df_analise["Ganhou_Remates"] = df_analise["MaisRemates"] == df_analise["FTR"]
+
+# Fazer a percentagem
+vitorias_mais_remates = df_analise['Ganhou_Remates'].sum()
+derrotas_mais_remates = len(df_analise) - vitorias_mais_remates
+percentagem = (vitorias_mais_remates / len(df_analise)) * 100
+
+#% de equipas que ganham quando estão a ganhar ao intervalo
+
+df_ht_win = df[df["HTR"] != "D"].copy()
+
+df_ht_win["WinAtHT"] = None
+
+
+for index, row in df_ht_win.iterrows():
+
+    ht_result = row["HTR"]
+    ft_result = row["FTR"]
+
+    #comparar W - Win / NW - Not Win
+    if ht_result == ft_result:
+        df_ht_win.loc[index, "WinAtHT"] = "W"
+    elif ht_result != ft_result:
+        df_ht_win.loc[index, "WinAtHT"] = "NW"
 
 
 
 
+#print(df_ht_win[['HomeTeam', 'AwayTeam', 'HTR', 'FTR', 'WinAtHT']].head(25))
 
-
+total_ht = len(df_ht_win)
+won = len(df_ht_win[df_ht_win['WinAtHT'] == 'W'])
+did_not_win = len(df_ht_win) - won
+percentagem_ht = (won / total_ht) * 100
 
 
 
@@ -74,15 +123,69 @@ ax[1].set_ylabel("Number of Matches (Frequency)")
 ax[1].set_xticks(range(0, df_jogo['Total_Golos'].max() + 1)) # Garante que todos os números apareçam no eixo X
 ax[1].grid(axis='y', linestyle='--', alpha=0.4)
 
+# --- GRÁFICO 3: EQUIPA COM MAIS REMATES GANHA? ---
 
-# --- GRÁFICO 3: ESPAÇO PARA O PRÓXIMO ---
-ax[2].text(0.5, 0.5, 'Próxima Estatística\n(ex: Cartões Amarelos)', ha='center', va='center', fontsize=12, color='gray')
-ax[2].set_title("Placeholder Estatística 3")
 
-# --- GRÁFICO 4: ESPAÇO PARA O PRÓXIMO ---
-ax[3].text(0.5, 0.5, 'Próxima Estatística\n(ex: Posse de Bola)', ha='center', va='center', fontsize=12, color='gray')
-ax[3].set_title("Placeholder Estatística 4")
+
+# Dados para o gráfico
+labels = ['Team with\n the most shots', 'Team with the\n most shots lost/draw']
+sizes = [vitorias_mais_remates, derrotas_mais_remates]
+colors = ["#37F637", "#F22020"]  # Verde claro, rosa claro
+explode = (0.05, 0)  # "Explodir" a primeira fatia
+
+# Criar pie chart
+wedges, texts, autotexts = ax[2].pie(
+    sizes, 
+    labels=labels, 
+    colors=colors,
+    autopct='%1.1f%%',  # Mostrar percentagem
+    explode=explode,
+    startangle=90,
+    textprops={'fontsize': 11, 'weight': 'bold'}
+)
+
+# Adicionar legenda com número de jogos
+ax[2].legend(
+    [f'Won: {vitorias_mais_remates} games', 
+     f'Did not win: {derrotas_mais_remates} games'],
+    loc='lower left',
+    fontsize=10
+)
+
+ax[2].set_title(f"Does Team with More Shots Win?\n({percentagem:.1f}% of matches)", 
+                fontsize=14, pad=10, weight='bold')
+
+# --- GRÁFICO 4: % EQUIPAS QUE GANHAM QUANDO ESTÃO A GANHAR AO INTERVALO ---
+
+# Dados para o gráfico
+labels = ['Team winning at \n HT wins', 'Team winning at the\n HT does not win']
+sizes = [won, did_not_win]
+colors = ["#37F637", "#F22020"]  # Verde claro, rosa claro
+explode = (0.05, 0)  # "Explodir" a primeira fatia
+
+# Criar pie chart
+wedges, texts, autotexts = ax[3].pie(
+    sizes, 
+    labels=labels, 
+    colors=colors,
+    autopct='%1.1f%%',  # Mostrar percentagem
+    explode=explode,
+    startangle=90,
+    textprops={'fontsize': 11, 'weight': 'bold'}
+)
+
+# Adicionar legenda com número de jogos
+ax[3].legend(
+    [f'Won: {won} games', 
+     f'Did not win: {did_not_win} games'],
+    loc='lower left',
+    fontsize=10
+)
+ax[3].set_title(f"Teams Leading at Half-Time\n({percentagem_ht:.1f}% maintain lead)", 
+                fontsize=14, pad=10, weight='bold')
 
 # Ajustar o layout para evitar sobreposição
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.savefig('outputs/graph/dashboard.png', dpi=300, bbox_inches='tight')
+print("✅ Dashboard stored: outputs/graph/dashboard.png")
 plt.show()
