@@ -180,12 +180,7 @@ numpy>=1.24.0
 **Full documentation:** [Football-Data.co.uk Notes](https://www.football-data.co.uk/notes.txt)
 
 ## Future Improvements
-- [ ] Add temporal analysis (performance over season weeks)
 - [ ] Implement predictive models (ML for match outcome prediction)
-- [ ] Compare multiple seasons
-- [ ] Add player-level statistics
-- [ ] Interactive dashboard with Plotly/Dash
-- [ ] Defensive metrics (clean sheets, goals conceded)
 
 ## License
 This project is for educational purposes. Data provided by Football-Data.co.uk.
